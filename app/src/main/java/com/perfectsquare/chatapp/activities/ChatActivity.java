@@ -173,7 +173,7 @@ public class ChatActivity extends AppCompatActivity {
     private void checkForConversions(){
         if(chatMessages.size() != 0){
             checkForConversionRemotely(
-                    preferenceManager.getString(Constants.KEY_SENDER_ID),
+                    preferenceManager.getString(Constants.KEY_USER_ID),
                     receiveUser.id
             );
             checkForConversionRemotely(
