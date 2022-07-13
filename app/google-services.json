@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "714607108307",
+    "project_id": "chat-app-b7db7",
+    "storage_bucket": "chat-app-b7db7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714607108307:android:b89c3ea47e36816bc17426",
+        "android_client_info": {
+          "package_name": "com.perfectsquare.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714607108307-8hhveqgj6q3qrh75ctatd9pinc3alj1v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoCJXxrAV_r49VaeC6UxGPSI7ALgUqBPM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "714607108307-8hhveqgj6q3qrh75ctatd9pinc3alj1v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
