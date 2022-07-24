@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.perfectsquare.chatapp"
-        minSdk 21
+        minSdk 25
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -57,4 +57,13 @@ dependencies {
 
     // MultiDex
     implementation 'androidx.multidex:multidex:2.0.1'
+
+    // https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    // https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-scalars
+    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
+
+    
+
+
 }

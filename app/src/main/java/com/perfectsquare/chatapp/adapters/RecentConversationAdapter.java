@@ -16,12 +16,12 @@ import com.perfectsquare.chatapp.models.User;
 
 import java.util.List;
 
-public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConversationAdapter.ConversionViewHolder>{
+public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConversationAdapter.ConversionViewHolder> {
 
     private final List<ChatMessage> chatMessages;
     private final ConversationListener conversationListener;
 
-    public RecentConversationAdapter(List<ChatMessage> chatMessages,ConversationListener conversationListener){
+    public RecentConversationAdapter(List<ChatMessage> chatMessages, ConversationListener conversationListener) {
         this.chatMessages = chatMessages;
         this.conversationListener = conversationListener;
     }
@@ -41,7 +41,7 @@ public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConver
 
     @Override
     public void onBindViewHolder(@NonNull ConversionViewHolder holder, int position) {
-            holder.setData(chatMessages.get(position));
+        holder.setData(chatMessages.get(position));
     }
 
     @Override
@@ -49,32 +49,32 @@ public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConver
         return chatMessages.size();
     }
 
-    class ConversionViewHolder extends RecyclerView.ViewHolder{
+    class ConversionViewHolder extends RecyclerView.ViewHolder {
         ItemContainerRecentConversionBinding binding;
 
-        ConversionViewHolder(ItemContainerRecentConversionBinding itemContainerRecentConversionBinding){
+        ConversionViewHolder(ItemContainerRecentConversionBinding itemContainerRecentConversionBinding) {
             super(itemContainerRecentConversionBinding.getRoot());
             binding = itemContainerRecentConversionBinding;
 
         }
 
-        void setData(ChatMessage chatMessage){
+        void setData(ChatMessage chatMessage) {
             binding.imageProfile.setImageBitmap(getConversionImage(chatMessage.conversionImage));
             binding.textName.setText(chatMessage.conversionName);
             binding.textRecentMessage.setText(chatMessage.message);
-            binding.getRoot().setOnClickListener(v->{
+            binding.getRoot().setOnClickListener(v -> {
                 User user = new User();
-                user.id=chatMessage.conversionId;
-                user.name=chatMessage.conversionName;
-                user.image=chatMessage.conversionImage;
+                user.id = chatMessage.conversionId;
+                user.name = chatMessage.conversionName;
+                user.image = chatMessage.conversionImage;
                 conversationListener.onConversationClicked(user);
             });
         }
     }
 
-    private Bitmap getConversionImage(String encodedImage){
-        byte[] bytes = Base64.decode(encodedImage,Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(bytes,0, bytes.length);
+    private Bitmap getConversionImage(String encodedImage) {
+        byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
     }
 }

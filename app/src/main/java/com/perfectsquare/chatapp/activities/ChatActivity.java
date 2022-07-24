@@ -1,6 +1,5 @@
 package com.perfectsquare.chatapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,8 +28,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends BaseActivity {
 
 
     private ActivityChatBinding binding;
@@ -40,6 +40,7 @@ public class ChatActivity extends AppCompatActivity {
     private PreferenceManager preferenceManager;
     private FirebaseFirestore database;
     private String conversionId = null;
+    private Boolean isReceiverAvailable = false;
 
 
     @Override
@@ -53,62 +54,86 @@ public class ChatActivity extends AppCompatActivity {
         listenMessage();
     }
 
-    private void init(){
-        preferenceManager  = new PreferenceManager(getApplicationContext());
+    private void init() {
+        preferenceManager = new PreferenceManager(getApplicationContext());
         chatMessages = new ArrayList<>();
         chatAdapter = new ChatAdapter(
-          chatMessages,
-          getBitMapFromEncodedString(receiveUser.image),
+                chatMessages,
+                getBitMapFromEncodedString(receiveUser.image),
                 preferenceManager.getString(Constants.KEY_USER_ID)
         );
         binding.chatRecyclerView.setAdapter(chatAdapter);
         database = FirebaseFirestore.getInstance();
     }
 
-    private void sendMessage(){
-        HashMap<String,Object> message = new HashMap<>();
-        message.put(Constants.KEY_SENDER_ID,preferenceManager.getString(Constants.KEY_USER_ID));
-        message.put(Constants.KEY_RECEIVER_ID,receiveUser.id);
-        message.put(Constants.KEY_MESSAGE,binding.inputMessage.getText().toString());
-        message.put(Constants.KEY_TIMESTAMP,new Date());
+    private void sendMessage() {
+        HashMap<String, Object> message = new HashMap<>();
+        message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+        message.put(Constants.KEY_RECEIVER_ID, receiveUser.id);
+        message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
+        message.put(Constants.KEY_TIMESTAMP, new Date());
         database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
-        if(conversionId != null){
+        if (conversionId != null) {
             updateConversation(binding.inputMessage.getText().toString());
-        }else{
-            HashMap<String,Object> conversation = new HashMap<>();
-            conversation.put(Constants.KEY_SENDER_ID,preferenceManager.getString(Constants.KEY_USER_ID));
-            conversation.put(Constants.KEY_SENDER_NAME,preferenceManager.getString(Constants.KEY_NAME));
-            conversation.put(Constants.KEY_SENDER_IMAGE,preferenceManager.getString(Constants.KEY_IMAGE));
-            conversation.put(Constants.KEY_RECEIVER_ID,receiveUser.id);
-            conversation.put(Constants.KEY_RECEIVER_NAME,receiveUser.name);
-            conversation.put(Constants.KEY_RECEIVER_IMAGE,receiveUser.image);
-            conversation.put(Constants.KEY_LAST_MESSAGE,binding.inputMessage.getText().toString());
-            conversation.put(Constants.KEY_TIMESTAMP,new Date());
+        } else {
+            HashMap<String, Object> conversation = new HashMap<>();
+            conversation.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+            conversation.put(Constants.KEY_SENDER_NAME, preferenceManager.getString(Constants.KEY_NAME));
+            conversation.put(Constants.KEY_SENDER_IMAGE, preferenceManager.getString(Constants.KEY_IMAGE));
+            conversation.put(Constants.KEY_RECEIVER_ID, receiveUser.id);
+            conversation.put(Constants.KEY_RECEIVER_NAME, receiveUser.name);
+            conversation.put(Constants.KEY_RECEIVER_IMAGE, receiveUser.image);
+            conversation.put(Constants.KEY_LAST_MESSAGE, binding.inputMessage.getText().toString());
+            conversation.put(Constants.KEY_TIMESTAMP, new Date());
             addConversation(conversation);
 
         }
         binding.inputMessage.setText(null);
     }
 
-    private void listenMessage(){
+    private void listenAvailabilityOfReceiver() {
+        database.collection(Constants.KEY_COLLECTION_USERS).document(
+                receiveUser.id
+        ).addSnapshotListener(ChatActivity.this, (value, error) -> {
+            if (error != null) {
+                return;
+            }
+            if (value != null) {
+                if (value.getLong(Constants.KEY_AVAILABILITY) != null) {
+                    int availability = Objects.requireNonNull(
+                            value.getLong(Constants.KEY_AVAILABILITY)
+                    ).intValue();
+                    isReceiverAvailable = availability == 1;
+                }
+            }
+            if(isReceiverAvailable){
+                binding.textAvailability.setVisibility(View.VISIBLE);
+            }else{
+                binding.textAvailability.setVisibility(View.GONE);
+            }
+        });
+    }
+
+
+    private void listenMessage() {
         database.collection(Constants.KEY_COLLECTION_CHAT)
-                .whereEqualTo(Constants.KEY_SENDER_ID,preferenceManager.getString(Constants.KEY_USER_ID))
-                .whereEqualTo(Constants.KEY_RECEIVER_ID,receiveUser.id)
+                .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
+                .whereEqualTo(Constants.KEY_RECEIVER_ID, receiveUser.id)
                 .addSnapshotListener(eventListener);
         database.collection(Constants.KEY_COLLECTION_CHAT)
-                .whereEqualTo(Constants.KEY_SENDER_ID,receiveUser.id)
-                .whereEqualTo(Constants.KEY_RECEIVER_ID,preferenceManager.getString(Constants.KEY_USER_ID))
+                .whereEqualTo(Constants.KEY_SENDER_ID, receiveUser.id)
+                .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
                 .addSnapshotListener(eventListener);
     }
 
-    private final EventListener<QuerySnapshot> eventListener = (value, error) ->{
-        if(error != null){
+    private final EventListener<QuerySnapshot> eventListener = (value, error) -> {
+        if (error != null) {
             return;
         }
-        if(value  != null){
-            int count  = chatMessages.size();
-            for(DocumentChange documentChange : value.getDocumentChanges()){
-                if(documentChange.getType() == DocumentChange.Type.ADDED){
+        if (value != null) {
+            int count = chatMessages.size();
+            for (DocumentChange documentChange : value.getDocumentChanges()) {
+                if (documentChange.getType() == DocumentChange.Type.ADDED) {
                     ChatMessage chatMessage = new ChatMessage();
                     chatMessage.senderId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
                     chatMessage.receiverId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
@@ -119,59 +144,59 @@ public class ChatActivity extends AppCompatActivity {
                 }
 
             }
-            Collections.sort(chatMessages, (obj1,obj2) -> obj1.dateObject.compareTo(obj2.dateObject));
-            if(count  == 0){
+            Collections.sort(chatMessages, (obj1, obj2) -> obj1.dateObject.compareTo(obj2.dateObject));
+            if (count == 0) {
                 chatAdapter.notifyDataSetChanged();
-            }else{
-                chatAdapter.notifyItemRangeInserted(chatMessages.size(),chatMessages.size());
-                binding.chatRecyclerView.smoothScrollToPosition(chatMessages.size() -1);
+            } else {
+                chatAdapter.notifyItemRangeInserted(chatMessages.size(), chatMessages.size());
+                binding.chatRecyclerView.smoothScrollToPosition(chatMessages.size() - 1);
 
             }
             binding.chatRecyclerView.setVisibility(View.VISIBLE);
         }
         binding.progressBar.setVisibility(View.GONE);
-        if(conversionId ==  null){
+        if (conversionId == null) {
             checkForConversions();
         }
     };
 
-    private Bitmap getBitMapFromEncodedString(String encodedImage){
-        byte[] bytes = Base64.decode(encodedImage,Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(bytes,0, bytes.length);
+    private Bitmap getBitMapFromEncodedString(String encodedImage) {
+        byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
 
-    private void loadReceiverDetails(){
+    private void loadReceiverDetails() {
         receiveUser = (User) getIntent().getSerializableExtra(Constants.KEY_USER);
         binding.textName.setText(receiveUser.name);
     }
 
 
-    public void setListener(){
+    public void setListener() {
         binding.imageBack.setOnClickListener(view -> onBackPressed());
-        binding.layoutSend.setOnClickListener(v-> sendMessage());
+        binding.layoutSend.setOnClickListener(v -> sendMessage());
     }
 
-    private String getReadableDateTime(Date date){
+    private String getReadableDateTime(Date date) {
         return new SimpleDateFormat("MMMM dd, yyyy - hh:mm a", Locale.getDefault()).format(date);
     }
 
-    private void addConversation(HashMap<String,Object> conversations){
+    private void addConversation(HashMap<String, Object> conversations) {
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                 .add(conversations)
                 .addOnSuccessListener(documentReference -> conversionId = documentReference.getId());
     }
 
-    private void updateConversation(String message){
+    private void updateConversation(String message) {
         DocumentReference documentReference =
                 database.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document(conversionId);
         documentReference.update(
-                Constants.KEY_LAST_MESSAGE,message,Constants.KEY_TIMESTAMP,new Date()
+                Constants.KEY_LAST_MESSAGE, message, Constants.KEY_TIMESTAMP, new Date()
         );
 
     }
 
-    private void checkForConversions(){
-        if(chatMessages.size() != 0){
+    private void checkForConversions() {
+        if (chatMessages.size() != 0) {
             checkForConversionRemotely(
                     preferenceManager.getString(Constants.KEY_USER_ID),
                     receiveUser.id
@@ -184,19 +209,25 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    private void checkForConversionRemotely(String senderId,String receiverId){
+    private void checkForConversionRemotely(String senderId, String receiverId) {
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
-                .whereEqualTo(Constants.KEY_SENDER_ID,senderId)
-                .whereEqualTo(Constants.KEY_RECEIVER_ID,receiverId)
+                .whereEqualTo(Constants.KEY_SENDER_ID, senderId)
+                .whereEqualTo(Constants.KEY_RECEIVER_ID, receiverId)
                 .get()
                 .addOnCompleteListener(conversionOnCompleteListener);
 
     }
 
     private final OnCompleteListener<QuerySnapshot> conversionOnCompleteListener = task -> {
-        if(task.isSuccessful() && task.getResult() != null && task.getResult().getDocuments().size() > 0){
+        if (task.isSuccessful() && task.getResult() != null && task.getResult().getDocuments().size() > 0) {
             DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
             conversionId = documentSnapshot.getId();
         }
     };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        listenAvailabilityOfReceiver();
+    }
 }
