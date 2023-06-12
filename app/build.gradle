@@ -52,8 +52,8 @@ dependencies {
     implementation 'com.makeramen:roundedimageview:2.3.0'
 
     //FireBase
-    implementation 'com.google.firebase:firebase-messaging:23.0.6'
-    implementation 'com.google.firebase:firebase-firestore:24.2.0'
+    implementation 'com.google.firebase:firebase-messaging:23.1.2'
+    implementation 'com.google.firebase:firebase-firestore:24.6.0'
 
     // MultiDex
     implementation 'androidx.multidex:multidex:2.0.1'

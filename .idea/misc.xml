@@ -3,6 +3,27 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/drawable/background_chat_input.xml" value="0.2275" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/drawable/background_content_bottom.xml" value="0.2275" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/drawable/background_contents_top.xml" value="0.2275" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/drawable/background_icon.xml" value="0.2275" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/drawable/background_image.xml" value="0.2275" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/drawable/background_input.xml" value="0.2275" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/drawable/background_receive_message.xml" value="0.2275" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/drawable/background_sent_message.xml" value="0.2275" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/drawable/ic_add.xml" value="0.2275" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/drawable/ic_back.xml" value="0.2275" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/drawable/ic_image.xml" value="0.2275" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/drawable/ic_info.xml" value="0.2275" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2275" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/drawable/ic_send.xml" value="0.2275" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/layout/activity_chat.xml" value="0.4" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/layout/activity_main.xml" value="0.25317028985507245" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/layout/activity_sign_up.xml" value="0.11302083333333333" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/layout/activity_users.xml" value="0.25317028985507245" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/layout/item_container_receive_message.xml" value="0.25317028985507245" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/layout/item_container_recent_conversion.xml" value="0.25317028985507245" />
+        <entry key="..\:/Android Projects/Chat-Application/app/src/main/res/layout/item_container_user.xml" value="0.25317028985507245" />
         <entry key="..\:/Users/Dell/AndroidStudioProjects/ChatApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.124" />
         <entry key="..\:/Users/Dell/AndroidStudioProjects/ChatApp/app/src/main/res/drawable/background_chat_input.xml" value="0.1575" />
         <entry key="..\:/Users/Dell/AndroidStudioProjects/ChatApp/app/src/main/res/drawable/background_content_bottom.xml" value="0.176" />

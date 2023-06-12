@@ -109,7 +109,7 @@ public class MainActivity extends BaseActivity implements ConversationListener {
                     chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                     conversations.add(chatMessage);
                 }else if(documentChange.getType() == DocumentChange.Type.MODIFIED){
-                    for(int i =0;i <conversations.size(); i++){
+                    for(int i =0; i <conversations.size(); i++){
                         String senderId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
                         String receiverId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
                         if(conversations.get(i).senderId.equals(senderId) && conversations.get(i).receiverId.equals(receiverId)){
